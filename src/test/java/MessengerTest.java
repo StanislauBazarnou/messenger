@@ -66,7 +66,7 @@ class MessengerTest {
     @Test
     void shouldGenerateEmail_whenAllKeysAreProvided() {
         // given
-        String template = "#{subject}. Hello, #{recipient}! #{body}";
+        String template = "#{subject}. Hello #{recipient}, #{body}";
 
         Map<String, String> allKeysMap = Map.of("subject", "Advertisement",
                 "recipient", "Anna",
