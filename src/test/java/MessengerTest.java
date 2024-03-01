@@ -1,6 +1,8 @@
 import org.example.MessengerApp;
 import org.example.TemplateGenerator;
+import org.example.TemplateGeneratorImpl;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -13,6 +15,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class MessengerTest {
     // unit under test (sut - system)
     private TemplateGenerator uut;
+
+    @BeforeEach
+    void setUp() {
+        uut = new TemplateGeneratorImpl();
+    }
 
     // CONSOLE MODE TESTS
 
