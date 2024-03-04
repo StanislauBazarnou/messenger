@@ -3,7 +3,7 @@ package org.example;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        System.out.println("Template generator welcomes you!");
         MessengerApp app = new MessengerApp();
         // if no arguments, use console mode
         if (args.length == 0) {
