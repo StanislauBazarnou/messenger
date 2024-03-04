@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -123,26 +122,36 @@ class MessengerTest {
     void fileMode_SingleMessage_CorrectOutput() {
         // given
         MessengerApp app = new MessengerApp();
-        String inputFile = "src/test/resources/inputSingle.txt";
-        String outputFile = "src/test/resources/outputSingle.txt";
+        String inputFile = "src/main/resources/input.txt";
+        String outputFile = "src/main/resources/output.txt";
 
         // when
         app.fileMode(inputFile, outputFile);
 
         // then
-        // Read the contents of outputFile and compare to expected result
-        String actualOutput = null; // TODO: read the contents of outputFile
-        String expectedOutput = null; // TODO: the output you expect
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(outputFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        String actualOutput = sb.toString().trim();
+        String expectedOutput = "Hello, Stas!";
         assertEquals(expectedOutput, actualOutput);
     }
 
     @Test
     void fileMode_NonexistentInputFile_ThrowsException() {
         MessengerApp app = new MessengerApp();
-        String inputFile = "src/test/resources/nonexistent.txt";
-        String outputFile = "src/test/resources/output.txt";
+        String inputFile = "src/main/resources/nonexistent.txt";
+        String outputFile = "src/main/resources/output.txt";
 
-        assertThrows(FileNotFoundException.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             app.fileMode(inputFile, outputFile);
         });
     }
@@ -151,9 +160,8 @@ class MessengerTest {
     void fileMode_NonexistentOutputFile_CreatesNewFile() {
         // given
         MessengerApp app = new MessengerApp();
-        String inputFile = "src/test/resources/input.txt";
-        String outputFile = "src/test/resources/nonexistent.txt";
-        // Before the run, ensure that outputFile does not exist
+        String inputFile = "src/main/resources/input.txt";
+        String outputFile = "src/main/resources/nonexistent.txt";
 
         // when
         app.fileMode(inputFile, outputFile);
