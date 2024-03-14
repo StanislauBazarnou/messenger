@@ -2,11 +2,14 @@ import annotations.Annotations;
 import org.example.TemplateGenerator;
 import org.example.TemplateGeneratorImpl;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Value;
+import util.LogToFileExtension;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -152,6 +155,7 @@ class ConsoleModeTest {
     }
 
     @Test
+    @ExtendWith(LogToFileExtension.class)
     void testTemplateGenerator() {
         // given
         HashMap<String, String> placeholders = new HashMap<>();
@@ -161,6 +165,31 @@ class ConsoleModeTest {
         String result = uut.generate(template, placeholders);
         // then
         assertEquals("Hello, John!", result);
+    }
+
+    @Test
+    void testWithMockedConsoleInput() {
+        // given
+        String input = "Hello, #{name}!\nStas";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+
+        // when
+        //System.in is "mocked" console input
+        Scanner myScanner = new Scanner(System.in);
+        String template = myScanner.nextLine();
+        String placeholder = myScanner.nextLine();
+        Map<String, String> placeholders = new HashMap<>();
+        placeholders.put("name", placeholder);
+
+        String result = uut.generate(template, placeholders);
+
+        // then
+        String expected = "Hello, Stas!";
+        assertEquals(expected, result);
+
+        // Reset System.in to standard console input after the test
+        System.setIn(System.in);
     }
 
 }
